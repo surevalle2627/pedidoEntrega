@@ -1,9 +1,10 @@
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from functools import wraps
 
 app = Flask(__name__)
 
-app.secret_key = 'tu_clave_secreta_muy_segura'
+app.secret_key = 'Gardevoir2621'
 
 
 users = {
