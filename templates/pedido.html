@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Entrega de Pedido{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="center">
+        <h4>Pedido No. xxxx</h4>
+        <h6>Tienda: xxxxxxxxxxxxxxxxxx Contacto: xxxxxxxxxxxxxx</h6>
+        <h6>Dirección: xxxxxxxxxxxxxxxxxx Teléfono: 99999999</h6>
+
+        <form id="pedidoform" method="POST" action="{{ url_for('pedido') }}">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Código</th>
+                        <th>Producto</th>
+                        <th>Precio de Venta</th>
+                        <th>Cantidad</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" name="codigo1" class="form-control" required></td>
+                        <td><input type="text" name="producto1" class="form-control" required></td>
+                        <td><input type="number" name="precio1" step="0.01" class="form-control" required></td>
+                        <td><input type="number" name="cantidad1" class="form-control" required></td>
+                        <td><input type="number" name="importe1" class="form-control" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="codigo2" class="form-control" required></td>
+                        <td><input type="text" name="producto2" class="form-control" required></td>
+                        <td><input type="number" name="precio2" step="0.01" class="form-control" required></td>
+                        <td><input type="number" name="cantidad2" class="form-control" required></td>
+                        <td><input type="number" name="importe2" class="form-control" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="codigo3" class="form-control" required></td>
+                        <td><input type="text" name="producto3" class="form-control" required></td>
+                        <td><input type="number" name="precio3" step="0.01" class="form-control" required></td>
+                        <td><input type="number" name="cantidad3" class="form-control" required></td>
+                        <td><input type="number" name="importe3" class="form-control" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="codigo4" class="form-control" required></td>
+                        <td><input type="text" name="producto4" class="form-control" required></td>
+                        <td><input type="number" name="precio4" step="0.01" class="form-control" required></td>
+                        <td><input type="number" name="cantidad4" class="form-control" required></td>
+                        <td><input type="number" name="importe4" class="form-control" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="codigo5" class="form-control" required></td>
+                        <td><input type="text" name="producto5" class="form-control" required></td>
+                        <td><input type="number" name="precio5" step="0.01" class="form-control" required></td>
+                        <td><input type="number" name="cantidad5" class="form-control" required></td>
+                        <td><input type="number" name="importe5" class="form-control" readonly></td>
+                    </tr>
+                    <tr class="total">
+                        <td colspan="3"></td>
+                        <td class="text-end"><strong>Total Bs.</strong></td>
+                        <td><input type="number" id="total" class="form-control" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <a class="btn btn-primary" href="{{ url_for('home') }}" style="color: white;">Cancelar</a>
+            <button type="submit" class="btn btn-success">Entregar Pedido</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('pedidoform');
+
+        // Función para calcular el importe de una fila
+        function calculateImporte(row) {
+            const precioInput = row.querySelector('input[name^="precio"]');
+            const cantidadInput = row.querySelector('input[name^="cantidad"]');
+            const importeInput = row.querySelector('input[name^="importe"]');
+
+            if (!precioInput || !cantidadInput || !importeInput) return;
+
+            const precio = parseFloat(precioInput.value) || 0;
+            const cantidad = parseInt(cantidadInput.value) || 0;
+
+            const importe = precio * cantidad;
+            importeInput.value = importe.toFixed(2);
+
+            updateTotal();
+        }
+
+        // Función para calcular el total de todos los importes
+        function updateTotal() {
+            let total = 0;
+            const importeInputs = form.querySelectorAll('input[name^="importe"]');
+            importeInputs.forEach(function(input) {
+                total += parseFloat(input.value) || 0;
+            });
+            document.getElementById('total').value = total.toFixed(2);
+        }
+
+        // Añadir 'event listeners' a todos los inputs de precio y cantidad
+        const rows = form.querySelectorAll('tbody tr');
+        rows.forEach(function(row) {
+            const precioInput = row.querySelector('input[name^="precio"]');
+            const cantidadInput = row.querySelector('input[name^="cantidad"]');
+
+            if (precioInput && cantidadInput) {
+                precioInput.addEventListener('input', () => calculateImporte(row));
+                cantidadInput.addEventListener('input', () => calculateImporte(row));
+            }
+        });
+    });
+</script>
+{% endblock %}
